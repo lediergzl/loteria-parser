@@ -1,0 +1,27 @@
+import { parseJugada } from 'loteria-parser';
+import { analyzeParseResult, getExecutiveSummary } from './analyzers';
+
+const textoJugadas = `
+Zuzel
+33 25 88 7 14 con 20 y 30 p5
+26 78 98 45 con 1 y 3 candado con 50
+Total: 500
+`;
+
+// Parsear las jugadas
+const resultado = parseJugada(textoJugadas);
+
+// Analizar el resultado
+const analisis = analyzeParseResult(resultado);
+
+// Obtener resumen ejecutivo
+const resumen = getExecutiveSummary(analisis);
+
+console.log('Overview:', resumen.overview);
+console.log('Nivel de riesgo:', resumen.riskLevel);
+console.log('Recomendaciones:', resumen.recommendations);
+
+// Métricas detalladas
+console.log('Complejidad:', analisis.complexity.score, analisis.complexity.level);
+console.log('Apuestas por tipo:', analisis.bets.byType);
+console.log('Números más comunes:', analisis.numbers.mostCommon);

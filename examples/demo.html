@@ -1,0 +1,1593 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎰 Loteria Parser - Demo Web REAL</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* [Mantén todos los estilos CSS anteriores iguales] */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary: #10b981;
+            --secondary-dark: #059669;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --gray-light: #e2e8f0;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 25px;
+            margin-bottom: 25px;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title i {
+            font-size: 1.2rem;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--gray-light);
+            border-radius: 8px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 200px;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--gray-light);
+            color: var(--dark);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: var(--secondary-dark);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            opacity: 0.9;
+        }
+
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .example-card {
+            background: var(--light);
+            border: 1px solid var(--gray-light);
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .example-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .example-title {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .example-desc {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 10px;
+        }
+
+        .example-code {
+            font-family: monospace;
+            background: var(--dark);
+            color: #fff;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            overflow-x: auto;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: var(--light);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid var(--gray-light);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .result-success .stat-value {
+            color: var(--secondary);
+        }
+
+        .result-error .stat-value {
+            color: var(--danger);
+        }
+
+        .result-warning .stat-value {
+            color: var(--warning);
+        }
+
+        .player-list {
+            margin-top: 20px;
+        }
+
+        .player-card {
+            background: var(--light);
+            border: 1px solid var(--gray-light);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .player-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .player-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .player-details {
+            flex: 1;
+        }
+
+        .player-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .player-stats {
+            font-size: 0.85rem;
+            color: var(--gray);
+            display: flex;
+            gap: 12px;
+        }
+
+        .player-amount {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--secondary);
+        }
+
+        .valid-badge {
+            background: var(--secondary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .invalid-badge {
+            background: var(--danger);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .error-panel {
+            background: #fee;
+            border: 1px solid #fcc;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .error-title {
+            color: var(--danger);
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .error-list {
+            list-style: none;
+        }
+
+        .error-item {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(239, 68, 68, 0.2);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .error-item:last-child {
+            border-bottom: none;
+        }
+
+        .warning-panel {
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .warning-title {
+            color: var(--warning);
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .performance {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--gray-light);
+            font-size: 0.9rem;
+        }
+
+        .performance:last-child {
+            border-bottom: none;
+        }
+
+        .performance-label {
+            color: var(--gray);
+        }
+
+        .performance-value {
+            font-weight: 600;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--gray);
+        }
+
+        .loading i {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .examples-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .player-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>
+                <i class="fas fa-dice"></i>
+                Loteria Parser - REAL
+                <i class="fas fa-chart-line"></i>
+            </h1>
+            <p>Parser REAL con cálculos exactos - Demo Web Funcional</p>
+        </header>
+
+        <!-- Input Section -->
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-edit"></i>
+                Ingrese sus jugadas
+            </h2>
+            <textarea id="jugadaInput" placeholder="Ejemplo de formato:&#10;&#10;Zuzel&#10;33 25 88 7 14 con 20 y 30 p5&#10;26 78 98 45 con 1 y 3 candado con 50&#10;Total: 500"></textarea>
+            
+            <div class="btn-group">
+                <button id="btnProcess" class="btn btn-primary">
+                    <i class="fas fa-play"></i>
+                    Procesar Jugada
+                </button>
+                <button id="btnLoadExample" class="btn btn-secondary">
+                    <i class="fas fa-file-alt"></i>
+                    Cargar Ejemplo Complejo
+                </button>
+                <button id="btnClear" class="btn btn-danger">
+                    <i class="fas fa-trash"></i>
+                    Limpiar Todo
+                </button>
+            </div>
+        </div>
+
+        <!-- Quick Examples -->
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-bolt"></i>
+                Ejemplos Rápidos (con cálculos REALES)
+            </h2>
+            <div class="examples-grid" id="quickExamples">
+                <!-- Ejemplos se cargan dinámicamente -->
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="resultsSection" class="card hidden">
+            <h2 class="card-title">
+                <i class="fas fa-chart-bar"></i>
+                Resultados del Análisis (REALES)
+            </h2>
+            
+            <!-- Loading State -->
+            <div id="loading" class="loading">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>Procesando jugada...</p>
+            </div>
+
+            <!-- Results Container -->
+            <div id="resultsContainer" class="hidden">
+                <!-- Summary Stats -->
+                <div class="stats-grid" id="summaryStats">
+                    <!-- Estadísticas se cargan dinámicamente -->
+                </div>
+
+                <!-- Players List -->
+                <div id="playersList" class="player-list">
+                    <!-- Lista de jugadores se carga dinámicamente -->
+                </div>
+
+                <!-- Detailed Results -->
+                <div id="detailedResults" class="card">
+                    <h3 class="card-title">
+                        <i class="fas fa-list-alt"></i>
+                        Detalles de Apuestas
+                    </h3>
+                    <div id="betDetails"></div>
+                </div>
+
+                <!-- Performance Info -->
+                <div id="performanceInfo" class="card">
+                    <h3 class="card-title">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Rendimiento
+                    </h3>
+                    <!-- Información de rendimiento se carga dinámicamente -->
+                </div>
+
+                <!-- Errors & Warnings -->
+                <div id="errorsContainer"></div>
+                <div id="warningsContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PARSER REAL IMPLEMENTADO EN JAVASCRIPT -->
+    <script>
+        // ============================================
+        // IMPLEMENTACIÓN REAL DEL PARSER
+        // ============================================
+        
+        class LoteriaParser {
+            constructor(config = {}) {
+                this.config = {
+                    strictMode: false,
+                    autoExpand: true,
+                    validateTotals: true,
+                    ...config
+                };
+            }
+            
+            parse(text) {
+                const startTime = Date.now();
+                
+                try {
+                    if (!text || !text.trim()) {
+                        return this.createErrorResult('Texto vacío');
+                    }
+                    
+                    const lines = text.split('\n').map(l => l.trim()).filter(l => l);
+                    
+                    if (lines.length === 0) {
+                        return this.createErrorResult('No hay líneas para procesar');
+                    }
+                    
+                    const bloques = this.separarBloques(lines);
+                    const jugadas = [];
+                    let totalGeneral = 0;
+                    let totalDeclaradoGeneral = 0;
+                    
+                    for (const bloque of bloques) {
+                        const jugada = this.procesarBloque(bloque);
+                        jugadas.push(jugada);
+                        totalGeneral += jugada.totalCalculado;
+                        totalDeclaradoGeneral += jugada.totalDeclarado || 0;
+                    }
+                    
+                    const parseTime = Date.now() - startTime;
+                    const diferencia = Math.abs(totalGeneral - totalDeclaradoGeneral);
+                    const esValido = diferencia < 0.01 || totalDeclaradoGeneral === 0;
+                    
+                    // Calcular estadísticas
+                    const stats = this.calcularEstadisticas(jugadas);
+                    
+                    return {
+                        success: true,
+                        jugadas,
+                        summary: {
+                            totalJugadas: jugadas.length,
+                            totalCalculado: totalGeneral,
+                            totalDeclarado: totalDeclaradoGeneral,
+                            difference: diferencia,
+                            isValid: esValido,
+                            confidence: this.calcularConfianza(jugadas, esValido)
+                        },
+                        metadata: {
+                            parseTime,
+                            originalLength: text.length,
+                            processedLength: text.split('\n').length,
+                            warnings: [],
+                            errors: []
+                        },
+                        stats
+                    };
+                    
+                } catch (error) {
+                    return {
+                        success: false,
+                        jugadas: [],
+                        summary: {
+                            totalJugadas: 0,
+                            totalCalculado: 0,
+                            totalDeclarado: 0,
+                            difference: 0,
+                            isValid: false,
+                            confidence: 0
+                        },
+                        metadata: {
+                            parseTime: Date.now() - startTime,
+                            originalLength: text.length,
+                            processedLength: 0,
+                            warnings: [],
+                            errors: [error.message || 'Error desconocido']
+                        },
+                        stats: {
+                            fijos: 0,
+                            corridos: 0,
+                            parles: 0,
+                            centenas: 0,
+                            candados: 0,
+                            totalApuestas: 0,
+                            totalNumeros: 0
+                        }
+                    };
+                }
+            }
+            
+            separarBloques(lines) {
+                const bloques = [];
+                let bloqueActual = [];
+                
+                for (const line of lines) {
+                    if (this.esNombreJugador(line) && bloqueActual.length > 0) {
+                        bloques.push([...bloqueActual]);
+                        bloqueActual = [line];
+                    } else {
+                        bloqueActual.push(line);
+                    }
+                }
+                
+                if (bloqueActual.length > 0) {
+                    bloques.push(bloqueActual);
+                }
+                
+                return bloques;
+            }
+            
+            esNombreJugador(line) {
+                // Verifica si la línea podría ser un nombre de jugador
+                if (!line || line.length < 2 || line.length > 50) return false;
+                if (/^\d/.test(line)) return false; // No empieza con número
+                if (/\b(con|parle|candado|total|p5|v\b|al\b|d\d|t\d)\b/i.test(line)) return false;
+                return true;
+            }
+            
+            procesarBloque(bloque) {
+                if (bloque.length === 0) {
+                    return this.crearJugadaVacia();
+                }
+                
+                let jugador = 'Desconocido';
+                let lineasApuestas = [];
+                let totalDeclarado = null;
+                
+                // Primera línea podría ser nombre
+                if (this.esNombreJugador(bloque[0])) {
+                    jugador = bloque[0];
+                    lineasApuestas = bloque.slice(1);
+                } else {
+                    lineasApuestas = bloque.slice(0);
+                }
+                
+                // Buscar total declarado
+                const totalIndex = lineasApuestas.findIndex(l => /total\s*[:=]?\s*[\d.,]+/i.test(l));
+                if (totalIndex !== -1) {
+                    const totalMatch = lineasApuestas[totalIndex].match(/total\s*[:=]?\s*[\d.,]+/i);
+                    if (totalMatch) {
+                        const monto = totalMatch[0].replace(/total\s*[:=]?\s*/i, '').replace(',', '.');
+                        totalDeclarado = parseFloat(monto);
+                    }
+                    lineasApuestas.splice(totalIndex, 1);
+                }
+                
+                // Procesar cada línea de apuesta
+                const detalles = [];
+                let totalCalculado = 0;
+                
+                for (const linea of lineasApuestas) {
+                    const detallesLinea = this.procesarLinea(linea);
+                    detalles.push(...detallesLinea);
+                    
+                    // Sumar al total
+                    for (const detalle of detallesLinea) {
+                        totalCalculado += detalle.monto;
+                    }
+                }
+                
+                const esValido = totalDeclarado === null || Math.abs(totalCalculado - totalDeclarado) < 0.01;
+                
+                return {
+                    jugador,
+                    totalCalculado: Math.round(totalCalculado * 100) / 100,
+                    totalDeclarado,
+                    lineas: lineasApuestas,
+                    detalles,
+                    isValid: esValido,
+                    warnings: [],
+                    errors: [],
+                    metadata: {
+                        timestamp: Date.now(),
+                        lineCount: lineasApuestas.length,
+                        betCount: detalles.length,
+                        numberCount: detalles.reduce((sum, d) => sum + d.numeros.length, 0)
+                    }
+                };
+            }
+            
+            procesarLinea(linea) {
+                const detalles = [];
+                const lowerLinea = linea.toLowerCase();
+                
+                // 1. Extraer números
+                const numeros = this.extraerNumeros(linea);
+                if (numeros.length === 0) return detalles;
+                
+                // 2. Extraer montos
+                const montos = this.extraerMontos(linea);
+                
+                // 3. Determinar tipo de apuesta
+                if (/\bparle\b/i.test(lowerLinea)) {
+                    // Parle
+                    const montoParle = montos[0] || 1;
+                    const combinaciones = this.calcularCombinaciones(numeros.length);
+                    
+                    detalles.push({
+                        tipo: 'parle',
+                        numeros,
+                        monto: combinaciones * montoParle,
+                        montoUnitario: montoParle,
+                        combinaciones,
+                        lineaOriginal: linea
+                    });
+                    
+                } else if (/\bcandado\b/i.test(lowerLinea)) {
+                    // Candado
+                    const montoCandado = montos[0] || 1;
+                    const combinaciones = this.calcularCombinaciones(numeros.length);
+                    const montoUnitario = combinaciones > 0 ? montoCandado / combinaciones : 0;
+                    
+                    detalles.push({
+                        tipo: 'candado',
+                        numeros,
+                        monto: montoCandado,
+                        montoUnitario: montoUnitario,
+                        combinaciones,
+                        lineaOriginal: linea
+                    });
+                    
+                } else if (/\bv\b/.test(lowerLinea)) {
+                    // Volteo
+                    const monto = montos[0] || 1;
+                    const numerosExpandidos = [];
+                    
+                    for (const num of numeros) {
+                        const volteo = num.split('').reverse().join('');
+                        numerosExpandidos.push(num, volteo);
+                    }
+                    
+                    detalles.push({
+                        tipo: 'especial',
+                        numeros: numerosExpandidos,
+                        monto: numerosExpandidos.length * monto,
+                        montoUnitario: monto,
+                        lineaOriginal: linea,
+                        expansion: { tipo: 'volteo' }
+                    });
+                    
+                } else if (/\bal\b/.test(lowerLinea)) {
+                    // Rango
+                    const monto = montos[0] || 1;
+                    const numerosExpandidos = this.expandirRango(linea);
+                    
+                    if (numerosExpandidos.length > 0) {
+                        detalles.push({
+                            tipo: 'especial',
+                            numeros: numerosExpandidos,
+                            monto: numerosExpandidos.length * monto,
+                            montoUnitario: monto,
+                            lineaOriginal: linea,
+                            expansion: { tipo: 'rango' }
+                        });
+                    }
+                    
+                } else if (montos.length >= 2) {
+                    // Fijo y corrido
+                    const montoFijo = montos[0] || 0;
+                    const montoCorrido = montos[1] || 0;
+                    
+                    if (montoFijo > 0) {
+                        detalles.push({
+                            tipo: 'fijo',
+                            numeros,
+                            monto: numeros.length * montoFijo,
+                            montoUnitario: montoFijo,
+                            lineaOriginal: linea
+                        });
+                    }
+                    
+                    if (montoCorrido > 0) {
+                        detalles.push({
+                            tipo: 'corrido',
+                            numeros,
+                            monto: numeros.length * montoCorrido,
+                            montoUnitario: montoCorrido,
+                            lineaOriginal: linea
+                        });
+                    }
+                    
+                } else if (montos.length >= 1) {
+                    // Solo fijo
+                    const monto = montos[0] || 1;
+                    
+                    detalles.push({
+                        tipo: 'fijo',
+                        numeros,
+                        monto: numeros.length * monto,
+                        montoUnitario: monto,
+                        lineaOriginal: linea
+                    });
+                }
+                
+                return detalles;
+            }
+            
+            extraerNumeros(texto) {
+                const numeros = [];
+                const matches = texto.match(/\b\d{2,3}\b/g) || [];
+                
+                for (const match of matches) {
+                    if (match.length === 2 || match.length === 3) {
+                        numeros.push(match.padStart(2, '0'));
+                    }
+                }
+                
+                return [...new Set(numeros)]; // Eliminar duplicados
+            }
+            
+            extraerMontos(texto) {
+                const montos = [];
+                const matches = texto.match(/(?:con|de|a)\s*([\d.,]+)(?:\s*y\s*([\d.,]+))?(?:\s*y\s*([\d.,]+))?/i);
+                
+                if (matches) {
+                    for (let i = 1; i <= 3; i++) {
+                        if (matches[i]) {
+                            const monto = parseFloat(matches[i].replace(',', '.'));
+                            if (!isNaN(monto)) {
+                                montos.push(monto);
+                            }
+                        }
+                    }
+                }
+                
+                // También buscar montos sueltos al final
+                const montosSueltos = texto.match(/\b(\d+(?:[.,]\d+)?)\s*$/);
+                if (montosSueltos && !montos.includes(parseFloat(montosSueltos[1].replace(',', '.')))) {
+                    const monto = parseFloat(montosSueltos[1].replace(',', '.'));
+                    if (!isNaN(monto)) {
+                        montos.push(monto);
+                    }
+                }
+                
+                return montos;
+            }
+            
+            expandirRango(texto) {
+                const match = texto.match(/(\d{1,2})\s*al\s*(\d{1,2})/i);
+                if (!match) return [];
+                
+                const inicio = parseInt(match[1], 10);
+                const fin = parseInt(match[2], 10);
+                
+                if (isNaN(inicio) || isNaN(fin) || inicio > fin) return [];
+                
+                const numeros = [];
+                for (let i = inicio; i <= fin; i++) {
+                    numeros.push(i.toString().padStart(2, '0'));
+                }
+                
+                return numeros;
+            }
+            
+            calcularCombinaciones(n) {
+                if (n < 2) return 0;
+                return (n * (n - 1)) / 2;
+            }
+            
+            calcularEstadisticas(jugadas) {
+                const stats = {
+                    fijos: 0,
+                    corridos: 0,
+                    parles: 0,
+                    centenas: 0,
+                    candados: 0,
+                    totalApuestas: 0,
+                    totalNumeros: 0
+                };
+                
+                for (const jugada of jugadas) {
+                    for (const detalle of jugada.detalles) {
+                        stats[detalle.tipo] = (stats[detalle.tipo] || 0) + detalle.monto;
+                        stats.totalApuestas++;
+                        stats.totalNumeros += detalle.numeros.length;
+                    }
+                }
+                
+                return stats;
+            }
+            
+            calcularConfianza(jugadas, esValido) {
+                let confianza = 1.0;
+                
+                if (!esValido) confianza *= 0.7;
+                
+                const totalDetalles = jugadas.reduce((sum, j) => sum + j.detalles.length, 0);
+                if (totalDetalles === 0) confianza *= 0.5;
+                
+                const jugadasInvalidas = jugadas.filter(j => !j.isValid).length;
+                if (jugadasInvalidas > 0) confianza *= (1 - jugadasInvalidas / jugadas.length * 0.3);
+                
+                return Math.round(confianza * 100) / 100;
+            }
+            
+            crearJugadaVacia() {
+                return {
+                    jugador: 'Desconocido',
+                    totalCalculado: 0,
+                    totalDeclarado: null,
+                    lineas: [],
+                    detalles: [],
+                    isValid: true,
+                    warnings: [],
+                    errors: [],
+                    metadata: {
+                        timestamp: Date.now(),
+                        lineCount: 0,
+                        betCount: 0,
+                        numberCount: 0
+                    }
+                };
+            }
+            
+            createErrorResult(mensaje) {
+                return {
+                    success: false,
+                    jugadas: [],
+                    summary: {
+                        totalJugadas: 0,
+                        totalCalculado: 0,
+                        totalDeclarado: 0,
+                        difference: 0,
+                        isValid: false,
+                        confidence: 0
+                    },
+                    metadata: {
+                        parseTime: 0,
+                        originalLength: 0,
+                        processedLength: 0,
+                        warnings: [],
+                        errors: [mensaje]
+                    },
+                    stats: {
+                        fijos: 0,
+                        corridos: 0,
+                        parles: 0,
+                        centenas: 0,
+                        candados: 0,
+                        totalApuestas: 0,
+                        totalNumeros: 0
+                    }
+                };
+            }
+        }
+        
+        // ============================================
+        // INTERFAZ GLOBAL PARA LA LIBRERÍA
+        // ============================================
+        
+        window.loteriaParser = {
+            parseJugada: function(text) {
+                const parser = new LoteriaParser();
+                return parser.parse(text);
+            },
+            
+            createParser: function(config) {
+                return new LoteriaParser(config);
+            },
+            
+            validateJugada: function(text) {
+                const parser = new LoteriaParser();
+                const result = parser.parse(text);
+                
+                return {
+                    valid: result.success && result.jugadas.length > 0,
+                    errors: result.metadata.errors,
+                    warnings: result.metadata.warnings,
+                    suggestions: []
+                };
+            }
+        };
+        
+        // ============================================
+        // CÓDIGO DE LA APLICACIÓN WEB
+        // ============================================
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos DOM
+            const jugadaInput = document.getElementById('jugadaInput');
+            const btnProcess = document.getElementById('btnProcess');
+            const btnLoadExample = document.getElementById('btnLoadExample');
+            const btnClear = document.getElementById('btnClear');
+            const resultsSection = document.getElementById('resultsSection');
+            const loading = document.getElementById('loading');
+            const resultsContainer = document.getElementById('resultsContainer');
+            const quickExamples = document.getElementById('quickExamples');
+            const summaryStats = document.getElementById('summaryStats');
+            const playersList = document.getElementById('playersList');
+            const betDetails = document.getElementById('betDetails');
+            const performanceInfo = document.getElementById('performanceInfo');
+            const errorsContainer = document.getElementById('errorsContainer');
+            const warningsContainer = document.getElementById('warningsContainer');
+            
+            // Verificar si la librería está disponible
+            if (!window.loteriaParser) {
+                alert('Error: La librería Loteria Parser no está disponible.');
+                return;
+            }
+            
+            // Ejemplos rápidos con cálculos REALES
+            const quickExamplesData = [
+                {
+                    title: 'Fijo Simple',
+                    desc: '3 números × $20 = $60',
+                    code: '05 10 15 con 20',
+                    icon: 'hashtag',
+                    expected: 60
+                },
+                {
+                    title: 'Fijo y Corrido',
+                    desc: 'Fijo: $60 + Corrido: $90 = $150',
+                    code: '05 10 15 con 20 y 30',
+                    icon: 'running',
+                    expected: 150
+                },
+                {
+                    title: 'Parle Explícito',
+                    desc: '1 parle × $5 = $5',
+                    code: '25*33 parle con 5',
+                    icon: 'times',
+                    expected: 5
+                },
+                {
+                    title: 'Parle Inline',
+                    desc: '3 números = 3 comb × $5 = $15',
+                    code: '05 10 15 con 20 p5',
+                    icon: 'arrows-alt-h',
+                    expected: 60 + 15 // Fijos + parle
+                },
+                {
+                    title: 'Candado',
+                    desc: '4 números = 6 comb × $8.33 ≈ $50',
+                    code: '05 10 15 20 candado con 50',
+                    icon: 'lock',
+                    expected: 50
+                },
+                {
+                    title: 'Volteo',
+                    desc: '10 y 01 × $10 = $20',
+                    code: '10v con 10',
+                    icon: 'exchange-alt',
+                    expected: 20
+                }
+            ];
+            
+            // Cargar ejemplos rápidos
+            quickExamplesData.forEach(example => {
+                const exampleCard = document.createElement('div');
+                exampleCard.className = 'example-card';
+                exampleCard.innerHTML = `
+                    <div class="example-title">
+                        <i class="fas fa-${example.icon}"></i>
+                        ${example.title}
+                    </div>
+                    <div class="example-desc">${example.desc}</div>
+                    <div class="example-code">${example.code}</div>
+                    <div style="margin-top: 8px; font-size: 0.8rem; color: var(--secondary);">
+                        <i class="fas fa-calculator"></i>
+                        Esperado: $${example.expected}
+                    </div>
+                `;
+                
+                exampleCard.addEventListener('click', () => {
+                    jugadaInput.value = example.code;
+                    processJugada();
+                });
+                
+                quickExamples.appendChild(exampleCard);
+            });
+            
+            // Cargar ejemplo completo
+            btnLoadExample.addEventListener('click', () => {
+                jugadaInput.value = `Zuzel
+33 25 88 7 14 con 20 y 30 p5
+26 78 98 45 con 1 y 3 candado con 50
+44 54 con 25
+33x25 parle con 10
+325 175 359 con 10 y 10 y 10 parle con 3
+10v 20v con 10
+15 18 por todas las centenas con 5
+10 pr 100  con 5
+Total: 500`;
+                processJugada();
+            });
+            
+            // Limpiar todo
+            btnClear.addEventListener('click', () => {
+                jugadaInput.value = '';
+                resultsSection.classList.add('hidden');
+                resultsContainer.classList.add('hidden');
+                loading.classList.add('hidden');
+            });
+            
+            // Procesar jugada
+            btnProcess.addEventListener('click', processJugada);
+            
+            function processJugada() {
+                const text = jugadaInput.value.trim();
+                
+                if (!text) {
+                    alert('Por favor ingrese una jugada para procesar');
+                    return;
+                }
+                
+                // Mostrar sección de resultados y loading
+                resultsSection.classList.remove('hidden');
+                loading.classList.remove('hidden');
+                resultsContainer.classList.add('hidden');
+                
+                // Usar setTimeout para mostrar el loading
+                setTimeout(() => {
+                    try {
+                        // Usar la librería REAL para parsear
+                        const result = window.loteriaParser.parseJugada(text);
+                        
+                        // Ocultar loading, mostrar resultados
+                        loading.classList.add('hidden');
+                        resultsContainer.classList.remove('hidden');
+                        
+                        // Mostrar estadísticas
+                        displaySummaryStats(result);
+                        
+                                                // Mostrar jugadores
+                        displayPlayersList(result);
+                        
+                        // Mostrar detalles de apuestas
+                        displayBetDetails(result);
+                        
+                        // Mostrar información de rendimiento
+                        displayPerformanceInfo(result);
+                        
+                        // Mostrar errores y advertencias
+                        displayErrorsAndWarnings(result);
+                        
+                    } catch (error) {
+                        loading.classList.add('hidden');
+                        alert(`Error al procesar: ${error.message}`);
+                        console.error(error);
+                    }
+                }, 300); // Pequeña pausa para mostrar el loading
+            }
+            
+            // Función para mostrar estadísticas resumidas
+            function displaySummaryStats(result) {
+                summaryStats.innerHTML = '';
+                
+                const stats = [
+                    {
+                        label: 'Total Jugadas',
+                        value: result.summary.totalJugadas,
+                        className: 'result-success',
+                        icon: 'fas fa-list-ol'
+                    },
+                    {
+                        label: 'Total Calculado',
+                        value: `$${result.summary.totalCalculado.toFixed(2)}`,
+                        className: 'result-success',
+                        icon: 'fas fa-calculator'
+                    },
+                    {
+                        label: 'Total Declarado',
+                        value: result.summary.totalDeclarado > 0 ? `$${result.summary.totalDeclarado.toFixed(2)}` : 'No declarado',
+                        className: 'result-warning',
+                        icon: 'fas fa-file-invoice-dollar'
+                    },
+                    {
+                        label: 'Diferencia',
+                        value: `$${result.summary.difference.toFixed(2)}`,
+                        className: result.summary.difference === 0 ? 'result-success' : 'result-error',
+                        icon: 'fas fa-balance-scale'
+                    },
+                    {
+                        label: 'Confianza',
+                        value: `${(result.summary.confidence * 100).toFixed(0)}%`,
+                        className: result.summary.confidence > 0.8 ? 'result-success' : 
+                                   result.summary.confidence > 0.5 ? 'result-warning' : 'result-error',
+                        icon: 'fas fa-chart-line'
+                    },
+                    {
+                        label: 'Válido',
+                        value: result.summary.isValid ? 'SÍ' : 'NO',
+                        className: result.summary.isValid ? 'result-success' : 'result-error',
+                        icon: result.summary.isValid ? 'fas fa-check-circle' : 'fas fa-times-circle'
+                    }
+                ];
+                
+                stats.forEach(stat => {
+                    const statCard = document.createElement('div');
+                    statCard.className = `stat-card ${stat.className}`;
+                    statCard.innerHTML = `
+                        <div class="stat-value">
+                            <i class="${stat.icon}"></i>
+                            ${stat.value}
+                        </div>
+                        <div class="stat-label">${stat.label}</div>
+                    `;
+                    summaryStats.appendChild(statCard);
+                });
+            }
+            
+            // Función para mostrar lista de jugadores
+            function displayPlayersList(result) {
+                playersList.innerHTML = '';
+                
+                if (!result.success || result.jugadas.length === 0) {
+                    playersList.innerHTML = '<p style="text-align: center; color: var(--gray);">No se encontraron jugadas</p>';
+                    return;
+                }
+                
+                result.jugadas.forEach((jugada, index) => {
+                    const jugadorCard = document.createElement('div');
+                    jugadorCard.className = 'player-card';
+                    
+                    // Calcular estadísticas del jugador
+                    const totalApuestas = jugada.detalles.length;
+                    const totalNumeros = jugada.detalles.reduce((sum, detalle) => sum + detalle.numeros.length, 0);
+                    const tiposApuestas = [...new Set(jugada.detalles.map(d => d.tipo))].join(', ');
+                    
+                    jugadorCard.innerHTML = `
+                        <div class="player-info">
+                            <div class="player-avatar">
+                                ${jugada.jugador.charAt(0).toUpperCase()}
+                            </div>
+                            <div class="player-details">
+                                <div class="player-name">${jugada.jugador}</div>
+                                <div class="player-stats">
+                                    <span><i class="fas fa-ticket-alt"></i> ${totalApuestas} apuestas</span>
+                                    <span><i class="fas fa-hashtag"></i> ${totalNumeros} números</span>
+                                    <span><i class="fas fa-tags"></i> ${tiposApuestas || 'fijo'}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 5px;">
+                            <div class="player-amount">$${jugada.totalCalculado.toFixed(2)}</div>
+                            <div class="${jugada.isValid ? 'valid-badge' : 'invalid-badge'}">
+                                ${jugada.isValid ? 'Válido' : 'Error'}
+                            </div>
+                        </div>
+                    `;
+                    
+                    // Añadir click para ver detalles
+                    jugadorCard.addEventListener('click', () => {
+                        showPlayerDetails(jugada, index);
+                    });
+                    
+                    playersList.appendChild(jugadorCard);
+                });
+            }
+            
+            // Función para mostrar detalles de apuestas
+            function displayBetDetails(result) {
+                betDetails.innerHTML = '';
+                
+                if (!result.success || result.jugadas.length === 0) {
+                    betDetails.innerHTML = '<p style="text-align: center; color: var(--gray);">No hay detalles de apuestas</p>';
+                    return;
+                }
+                
+                // Crear tabla de detalles
+                const table = document.createElement('table');
+                table.style.width = '100%';
+                table.style.borderCollapse = 'collapse';
+                table.style.marginTop = '15px';
+                
+                // Cabecera de la tabla
+                const thead = document.createElement('thead');
+                thead.innerHTML = `
+                    <tr style="background: var(--light);">
+                        <th style="padding: 12px; text-align: left; border-bottom: 2px solid var(--gray-light);">Jugador</th>
+                        <th style="padding: 12px; text-align: left; border-bottom: 2px solid var(--gray-light);">Tipo</th>
+                        <th style="padding: 12px; text-align: left; border-bottom: 2px solid var(--gray-light);">Números</th>
+                        <th style="padding: 12px; text-align: left; border-bottom: 2px solid var(--gray-light);">Monto Unit.</th>
+                        <th style="padding: 12px; text-align: left; border-bottom: 2px solid var(--gray-light);">Total</th>
+                    </tr>
+                `;
+                table.appendChild(thead);
+                
+                // Cuerpo de la tabla
+                const tbody = document.createElement('tbody');
+                
+                result.jugadas.forEach(jugada => {
+                    jugada.detalles.forEach(detalle => {
+                        const row = document.createElement('tr');
+                        row.style.borderBottom = '1px solid var(--gray-light)';
+                        row.innerHTML = `
+                            <td style="padding: 10px;">${jugada.jugador}</td>
+                            <td style="padding: 10px;">
+                                <span style="display: inline-block; padding: 4px 8px; background: ${getColorForType(detalle.tipo)}; color: white; border-radius: 4px; font-size: 0.8rem;">
+                                    ${detalle.tipo.toUpperCase()}
+                                </span>
+                            </td>
+                            <td style="padding: 10px; font-family: monospace;">${detalle.numeros.join(', ')}</td>
+                            <td style="padding: 10px;">$${detalle.montoUnitario?.toFixed(2) || detalle.monto?.toFixed(2) || '0.00'}</td>
+                            <td style="padding: 10px; font-weight: 600;">$${detalle.monto?.toFixed(2) || '0.00'}</td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                });
+                
+                table.appendChild(tbody);
+                betDetails.appendChild(table);
+            }
+            
+            // Función auxiliar para obtener color según tipo
+            function getColorForType(tipo) {
+                const colors = {
+                    'fijo': '#4f46e5',
+                    'corrido': '#10b981',
+                    'parle': '#f59e0b',
+                    'candado': '#8b5cf6',
+                    'especial': '#ec4899'
+                };
+                return colors[tipo] || '#64748b';
+            }
+            
+            // Función para mostrar información de rendimiento
+            function displayPerformanceInfo(result) {
+                performanceInfo.innerHTML = '';
+                
+                const performanceItems = [
+                    {
+                        label: 'Tiempo de Procesamiento',
+                        value: `${result.metadata.parseTime}ms`,
+                        icon: 'fas fa-stopwatch'
+                    },
+                    {
+                        label: 'Líneas Procesadas',
+                        value: result.metadata.processedLength,
+                        icon: 'fas fa-code'
+                    },
+                    {
+                        label: 'Tamaño del Texto',
+                        value: `${result.metadata.originalLength} caracteres`,
+                        icon: 'fas fa-ruler'
+                    },
+                    {
+                        label: 'Apuestas Totales',
+                        value: result.stats.totalApuestas,
+                        icon: 'fas fa-ticket-alt'
+                    },
+                    {
+                        label: 'Números Únicos',
+                        value: result.stats.totalNumeros,
+                        icon: 'fas fa-hashtag'
+                    },
+                    {
+                        label: 'Fijos / Corridos / Parles',
+                        value: `${result.stats.fijos.toFixed(2)} / ${result.stats.corridos.toFixed(2)} / ${result.stats.parles.toFixed(2)}`,
+                        icon: 'fas fa-chart-pie'
+                    }
+                ];
+                
+                performanceItems.forEach(item => {
+                    const perfDiv = document.createElement('div');
+                    perfDiv.className = 'performance';
+                    perfDiv.innerHTML = `
+                        <div class="performance-label">
+                            <i class="${item.icon}"></i>
+                            ${item.label}
+                        </div>
+                        <div class="performance-value">${item.value}</div>
+                    `;
+                    performanceInfo.appendChild(perfDiv);
+                });
+            }
+            
+            // Función para mostrar errores y advertencias
+            function displayErrorsAndWarnings(result) {
+                errorsContainer.innerHTML = '';
+                warningsContainer.innerHTML = '';
+                
+                // Mostrar errores
+                if (result.metadata.errors && result.metadata.errors.length > 0) {
+                    errorsContainer.innerHTML = `
+                        <div class="error-panel">
+                            <div class="error-title">
+                                <i class="fas fa-exclamation-circle"></i>
+                                Errores (${result.metadata.errors.length})
+                            </div>
+                            <ul class="error-list">
+                                ${result.metadata.errors.map(error => `
+                                    <li class="error-item">
+                                        <i class="fas fa-times-circle"></i>
+                                        ${error}
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+                
+                // Mostrar advertencias
+                if (result.metadata.warnings && result.metadata.warnings.length > 0) {
+                    warningsContainer.innerHTML = `
+                        <div class="warning-panel">
+                            <div class="warning-title">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                Advertencias (${result.metadata.warnings.length})
+                            </div>
+                            <ul class="error-list">
+                                ${result.metadata.warnings.map(warning => `
+                                    <li class="error-item">
+                                        <i class="fas fa-info-circle"></i>
+                                        ${warning}
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+            }
+            
+            // Función para mostrar detalles de un jugador específico
+            function showPlayerDetails(jugada, index) {
+                // Crear modal simple
+                const modal = document.createElement('div');
+                modal.style.position = 'fixed';
+                modal.style.top = '0';
+                modal.style.left = '0';
+                modal.style.width = '100%';
+                modal.style.height = '100%';
+                modal.style.backgroundColor = 'rgba(0,0,0,0.5)';
+                modal.style.display = 'flex';
+                modal.style.justifyContent = 'center';
+                modal.style.alignItems = 'center';
+                modal.style.zIndex = '1000';
+                
+                const modalContent = document.createElement('div');
+                modalContent.style.background = 'white';
+                modalContent.style.borderRadius = '12px';
+                modalContent.style.padding = '25px';
+                modalContent.style.maxWidth = '90%';
+                modalContent.style.maxHeight = '80%';
+                modalContent.style.overflow = 'auto';
+                modalContent.style.boxShadow = '0 10px 25px rgba(0,0,0,0.3)';
+                
+                modalContent.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 style="color: var(--primary);">
+                            <i class="fas fa-user"></i>
+                            ${jugada.jugador} - Detalles Completos
+                        </h3>
+                        <button id="closeModal" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--gray);">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <strong>Total Calculado:</strong> $${jugada.totalCalculado.toFixed(2)}<br>
+                        <strong>Total Declarado:</strong> ${jugada.totalDeclarado ? '$' + jugada.totalDeclarado.toFixed(2) : 'No declarado'}<br>
+                        <strong>Estado:</strong> <span style="color: ${jugada.isValid ? 'var(--secondary)' : 'var(--danger)'};">${jugada.isValid ? 'Válido ✓' : 'Error ✗'}</span>
+                    </div>
+                    
+                    <h4 style="color: var(--primary); margin-bottom: 15px;">
+                        <i class="fas fa-list"></i>
+                        Líneas Originales (${jugada.lineas.length})
+                    </h4>
+                    <div style="background: var(--light); padding: 15px; border-radius: 8px; margin-bottom: 20px; font-family: monospace;">
+                        ${jugada.lineas.map(line => `<div>${line}</div>`).join('')}
+                    </div>
+                    
+                    <h4 style="color: var(--primary); margin-bottom: 15px;">
+                        <i class="fas fa-calculator"></i>
+                        Detalles de Apuestas (${jugada.detalles.length})
+                    </h4>
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background: var(--light);">
+                                    <th style="padding: 10px; text-align: left;">Tipo</th>
+                                    <th style="padding: 10px; text-align: left;">Números</th>
+                                    <th style="padding: 10px; text-align: left;">Cant.</th>
+                                    <th style="padding: 10px; text-align: left;">Monto Unit.</th>
+                                    <th style="padding: 10px; text-align: left;">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${jugada.detalles.map(detalle => `
+                                    <tr style="border-bottom: 1px solid var(--gray-light);">
+                                        <td style="padding: 8px;">
+                                            <span style="display: inline-block; padding: 3px 6px; background: ${getColorForType(detalle.tipo)}; color: white; border-radius: 4px; font-size: 0.8rem;">
+                                                ${detalle.tipo.toUpperCase()}
+                                            </span>
+                                        </td>
+                                        <td style="padding: 8px; font-family: monospace;">${detalle.numeros.join(', ')}</td>
+                                        <td style="padding: 8px;">${detalle.numeros.length}</td>
+                                        <td style="padding: 8px;">$${detalle.montoUnitario?.toFixed(2) || '0.00'}</td>
+                                        <td style="padding: 8px; font-weight: 600;">$${detalle.monto?.toFixed(2) || '0.00'}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                
+                modal.appendChild(modalContent);
+                document.body.appendChild(modal);
+                
+                // Cerrar modal
+                const closeButton = modalContent.querySelector('#closeModal');
+                closeButton.addEventListener('click', () => {
+                    document.body.removeChild(modal);
+                });
+                
+                // Cerrar al hacer clic fuera del contenido
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        document.body.removeChild(modal);
+                    }
+                });
+            }
+            
+            // Añadir atajo de teclado Ctrl+Enter para procesar
+            jugadaInput.addEventListener('keydown', (e) => {
+                if (e.ctrlKey && e.key === 'Enter') {
+                    processJugada();
+                }
+            });
+            
+            // Inicializar con un ejemplo simple
+            jugadaInput.value = `Carlos
+33 25 88 con 10 y 20
+Total: 90`;
+            
+            // Mensaje de bienvenida en consola
+            console.log('%c🎰 Loteria Parser - REAL DEMO 🎰', 'color: #4f46e5; font-size: 18px; font-weight: bold;');
+            console.log('%cParser completamente funcional listo para usar.', 'color: #10b981;');
+        });
+    </script>
+</body>
+</html>

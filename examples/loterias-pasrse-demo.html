@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎰 Loteria Parser - Demo Web</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary: #10b981;
+            --secondary-dark: #059669;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --gray-light: #e2e8f0;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 25px;
+            margin-bottom: 25px;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title i {
+            font-size: 1.2rem;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--gray-light);
+            border-radius: 8px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 200px;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--gray-light);
+            color: var(--dark);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: var(--secondary-dark);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            opacity: 0.9;
+        }
+
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .example-card {
+            background: var(--light);
+            border: 1px solid var(--gray-light);
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .example-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .example-title {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .example-desc {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 10px;
+        }
+
+        .example-code {
+            font-family: monospace;
+            background: var(--dark);
+            color: #fff;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            overflow-x: auto;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: var(--light);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid var(--gray-light);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .result-success .stat-value {
+            color: var(--secondary);
+        }
+
+        .result-error .stat-value {
+            color: var(--danger);
+        }
+
+        .result-warning .stat-value {
+            color: var(--warning);
+        }
+
+        .player-list {
+            margin-top: 20px;
+        }
+
+        .player-card {
+            background: var(--light);
+            border: 1px solid var(--gray-light);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .player-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .player-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .player-details {
+            flex: 1;
+        }
+
+        .player-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .player-stats {
+            font-size: 0.85rem;
+            color: var(--gray);
+            display: flex;
+            gap: 12px;
+        }
+
+        .player-amount {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--secondary);
+        }
+
+        .valid-badge {
+            background: var(--secondary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .invalid-badge {
+            background: var(--danger);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .error-panel {
+            background: #fee;
+            border: 1px solid #fcc;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .error-title {
+            color: var(--danger);
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .error-list {
+            list-style: none;
+        }
+
+        .error-item {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(239, 68, 68, 0.2);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .error-item:last-child {
+            border-bottom: none;
+        }
+
+        .warning-panel {
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .warning-title {
+            color: var(--warning);
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .performance {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--gray-light);
+            font-size: 0.9rem;
+        }
+
+        .performance:last-child {
+            border-bottom: none;
+        }
+
+        .performance-label {
+            color: var(--gray);
+        }
+
+        .performance-value {
+            font-weight: 600;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--gray);
+        }
+
+        .loading i {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .examples-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .player-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>
+                <i class="fas fa-dice"></i>
+                Loteria Parser
+                <i class="fas fa-chart-line"></i>
+            </h1>
+            <p>Procesador avanzado de jugadas de lotería - Demo Web</p>
+        </header>
+
+        <!-- Input Section -->
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-edit"></i>
+                Ingrese sus jugadas
+            </h2>
+            <textarea id="jugadaInput" placeholder="Ejemplo de formato:&#10;&#10;Zuzel&#10;33 25 88 7 14 con 20 y 30 p5&#10;26 78 98 45 con 1 y 3 candado con 50&#10;Total: 500"></textarea>
+            
+            <div class="btn-group">
+                <button id="btnProcess" class="btn btn-primary">
+                    <i class="fas fa-play"></i>
+                    Procesar Jugada
+                </button>
+                <button id="btnLoadExample" class="btn btn-secondary">
+                    <i class="fas fa-file-alt"></i>
+                    Cargar Ejemplo Complejo
+                </button>
+                <button id="btnClear" class="btn btn-danger">
+                    <i class="fas fa-trash"></i>
+                    Limpiar Todo
+                </button>
+            </div>
+        </div>
+
+        <!-- Quick Examples -->
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-bolt"></i>
+                Ejemplos Rápidos
+            </h2>
+            <div class="examples-grid" id="quickExamples">
+                <!-- Ejemplos se cargan dinámicamente -->
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="resultsSection" class="card hidden">
+            <h2 class="card-title">
+                <i class="fas fa-chart-bar"></i>
+                Resultados del Análisis
+            </h2>
+            
+            <!-- Loading State -->
+            <div id="loading" class="loading">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>Procesando jugada...</p>
+            </div>
+
+            <!-- Results Container -->
+            <div id="resultsContainer" class="hidden">
+                <!-- Summary Stats -->
+                <div class="stats-grid" id="summaryStats">
+                    <!-- Estadísticas se cargan dinámicamente -->
+                </div>
+
+                <!-- Players List -->
+                <div id="playersList" class="player-list">
+                    <!-- Lista de jugadores se carga dinámicamente -->
+                </div>
+
+                <!-- Performance Info -->
+                <div id="performanceInfo" class="card">
+                    <h3 class="card-title">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Rendimiento
+                    </h3>
+                    <!-- Información de rendimiento se carga dinámicamente -->
+                </div>
+
+                <!-- Errors & Warnings -->
+                <div id="errorsContainer"></div>
+                <div id="warningsContainer"></div>
+            </div>
+        </div>
+
+        <!-- Info Panel -->
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-info-circle"></i>
+                Formatos Soportados
+            </h2>
+            <div class="examples-grid">
+                <div class="example-card">
+                    <div class="example-title">
+                        <i class="fas fa-hashtag"></i>
+                        Fijos
+                    </div>
+                    <div class="example-desc">Apuestas fijas simples</div>
+                    <div class="example-code">05 10 15 con 20</div>
+                </div>
+                
+                <div class="example-card">
+                    <div class="example-title">
+                        <i class="fas fa-running"></i>
+                        Fijo y Corrido
+                    </div>
+                    <div class="example-desc">Fijo + corrido en una línea</div>
+                    <div class="example-code">05 10 15 con 20 y 30</div>
+                </div>
+                
+                <div class="example-card">
+                    <div class="example-title">
+                        <i class="fas fa-times"></i>
+                        Parlés
+                    </div>
+                    <div class="example-desc">Apuestas combinadas</div>
+                    <div class="example-code">25*33 parle con 5</div>
+                </div>
+                
+                <div class="example-card">
+                    <div class="example-title">
+                        <i class="fas fa-lock"></i>
+                        Candados
+                    </div>
+                    <div class="example-desc">Combinaciones con monto fijo</div>
+                    <div class="example-code">05 10 candado con 30</div>
+                </div>
+                
+                <div class="example-card">
+                    <div class="example-title">
+                        <i class="fas fa-exchange-alt"></i>
+                        Volteos
+                    </div>
+                    <div class="example-desc">Número y su volteo</div>
+                    <div class="example-code">10v con 10</div>
+                </div>
+                
+                <div class="example-card">
+                    <div class="example-title">
+                        <i class="fas fa-arrows-alt-h"></i>
+                        Rangos
+                    </div>
+                    <div class="example-desc">Secuencia de números</div>
+                    <div class="example-code">05 al 15 con 10</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script de la librería -->
+    <!-- Opción 1: Desde CDN (descomentar cuando la librería esté publicada) -->
+    <!--
+    <script src="https://unpkg.com/loteria-parser/dist/esm/bundle.js"></script>
+    -->
+    
+    <!-- Opción 2: Desde archivo local (ajustar ruta) -->
+    <!-- <script src="../dist/esm/bundle.js"></script> -->
+    
+    <!-- Opción 3: En este ejemplo, simularemos la librería con un mock -->
+    <script>
+        // Mock de la librería para demostración
+        window.loteriaParser = {
+            parseJugada: function(text) {
+                // Simulamos un parseo con retraso
+                return new Promise(resolve => {
+                    setTimeout(() => {
+                        // Datos de ejemplo para la demo
+                        const isSuccess = text && text.trim().length > 0;
+                        
+                        if (!isSuccess) {
+                            resolve({
+                                success: false,
+                                metadata: {
+                                    errors: ['Texto vacío o inválido'],
+                                    warnings: [],
+                                    parseTime: 0
+                                }
+                            });
+                            return;
+                        }
+                        
+                        // Simular jugadas basadas en el texto
+                        const playerCount = Math.min(5, Math.max(1, text.split('\n').filter(l => l.trim()).length / 3));
+                        const jugadas = [];
+                        let totalCalculado = 0;
+                        
+                        for (let i = 0; i < playerCount; i++) {
+                            const total = 100 + Math.random() * 900;
+                            const declarado = total + (Math.random() > 0.7 ? (Math.random() * 100 - 50) : 0);
+                            const isValid = Math.abs(total - declarado) < 0.01;
+                            
+                            jugadas.push({
+                                jugador: `Jugador ${i + 1}`,
+                                totalCalculado: total,
+                                totalDeclarado: declarado,
+                                isValid: isValid,
+                                detalles: [
+                                    {
+                                        tipo: 'fijo',
+                                        numeros: ['05', '10', '15'],
+                                        monto: 60,
+                                        montoUnitario: 20
+                                    },
+                                    {
+                                        tipo: 'corrido',
+                                        numeros: ['05', '10', '15'],
+                                        monto: 90,
+                                        montoUnitario: 30
+                                    }
+                                ]
+                            });
+                            
+                            totalCalculado += total;
+                        }
+                        
+                        resolve({
+                            success: true,
+                            jugadas: jugadas,
+                            summary: {
+                                totalJugadas: playerCount,
+                                totalCalculado: totalCalculado,
+                                totalDeclarado: totalCalculado + (Math.random() * 200 - 100),
+                                isValid: Math.random() > 0.3,
+                                confidence: 0.7 + Math.random() * 0.3
+                            },
+                            metadata: {
+                                parseTime: 50 + Math.random() * 100,
+                                originalLength: text.length,
+                                processedLength: text.length * 1.5,
+                                warnings: Math.random() > 0.5 ? ['Algunas líneas no pudieron ser procesadas'] : [],
+                                errors: []
+                            },
+                            stats: {
+                                fijos: 300,
+                                corridos: 450,
+                                parles: 150,
+                                centenas: 200,
+                                candados: 100,
+                                totalApuestas: playerCount * 2,
+                                totalNumeros: playerCount * 6
+                            }
+                        });
+                    }, 800); // Simular 800ms de procesamiento
+                });
+            },
+            
+            createParser: function(config) {
+                return {
+                    parse: function(text) {
+                        return window.loteriaParser.parseJugada(text);
+                    },
+                    validate: function(text) {
+                        return {
+                            valid: text && text.trim().length > 0,
+                            errors: [],
+                            warnings: [],
+                            suggestions: []
+                        };
+                    },
+                    getInfo: function() {
+                        return {
+                            version: '1.0.0',
+                            plugins: ['basic-bet-plugin', 'parle-plugin', 'auto-correct-plugin']
+                        };
+                    }
+                };
+            },
+            
+            validateJugada: function(text) {
+                return {
+                    valid: text && text.trim().length > 0,
+                    errors: text ? [] : ['Texto vacío'],
+                    warnings: [],
+                    suggestions: text ? [] : ['Ingrese una jugada válida']
+                };
+            }
+        };
+    </script>
+
+    <!-- Script de la aplicación -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos DOM
+            const jugadaInput = document.getElementById('jugadaInput');
+            const btnProcess = document.getElementById('btnProcess');
+            const btnLoadExample = document.getElementById('btnLoadExample');
+            const btnClear = document.getElementById('btnClear');
+            const resultsSection = document.getElementById('resultsSection');
+            const loading = document.getElementById('loading');
+            const resultsContainer = document.getElementById('resultsContainer');
+            const quickExamples = document.getElementById('quickExamples');
+            const summaryStats = document.getElementById('summaryStats');
+            const playersList = document.getElementById('playersList');
+            const performanceInfo = document.getElementById('performanceInfo');
+            const errorsContainer = document.getElementById('errorsContainer');
+            const warningsContainer = document.getElementById('warningsContainer');
+            
+            // Verificar si la librería está disponible
+            if (!window.loteriaParser) {
+                alert('Error: La librería Loteria Parser no está disponible. Verifique que el script esté cargado correctamente.');
+                return;
+            }
+            
+            // Ejemplos rápidos
+            const quickExamplesData = [
+                {
+                    title: 'Fijo Simple',
+                    desc: '3 números × $20 = $60',
+                    code: '05 10 15 con 20',
+                    icon: 'hashtag'
+                },
+                {
+                    title: 'Fijo y Corrido',
+                    desc: 'Fijo: $60 + Corrido: $90 = $150',
+                    code: '05 10 15 con 20 y 30',
+                    icon: 'running'
+                },
+                {
+                    title: 'Parle Explícito',
+                    desc: '1 parle × $5 = $5',
+                    code: '25*33 parle con 5',
+                    icon: 'times'
+                },
+                {
+                    title: 'Parle Inline',
+                    desc: '3 comb × $5 = $15',
+                    code: '05 10 15 con 20 p5',
+                    icon: 'arrows-alt-h'
+                },
+                {
+                    title: 'Candado Completo',
+                    desc: '4 números = 6 comb',
+                    code: '26 78 98 45 con 1 y 3 candado con 50',
+                    icon: 'lock'
+                },
+                {
+                    title: 'Volteo',
+                    desc: '10 y 01 × $10 = $20',
+                    code: '10v con 10',
+                    icon: 'exchange-alt'
+                }
+            ];
+            
+            // Cargar ejemplos rápidos
+            quickExamplesData.forEach(example => {
+                const exampleCard = document.createElement('div');
+                exampleCard.className = 'example-card';
+                exampleCard.innerHTML = `
+                    <div class="example-title">
+                        <i class="fas fa-${example.icon}"></i>
+                        ${example.title}
+                    </div>
+                    <div class="example-desc">${example.desc}</div>
+                    <div class="example-code">${example.code}</div>
+                `;
+                
+                exampleCard.addEventListener('click', () => {
+                    jugadaInput.value = example.code;
+                    processJugada();
+                });
+                
+                quickExamples.appendChild(exampleCard);
+            });
+            
+            // Cargar ejemplo completo
+            btnLoadExample.addEventListener('click', () => {
+                jugadaInput.value = `Zuzel
+33 25 88 7 14 con 20 y 30 p5
+26 78 98 45 con 1 y 3 candado con 50
+44 54 con 25
+33x25 parle con 10
+325 175 359 con 10 y 10 y 10 parle con 3
+10v 20v con 10
+15 18 por todas las centenas con 5
+10 pr 100  con 5
+Total: 500`;
+                processJugada();
+            });
+            
+            // Limpiar todo
+            btnClear.addEventListener('click', () => {
+                jugadaInput.value = '';
+                resultsSection.classList.add('hidden');
+                resultsContainer.classList.add('hidden');
+                loading.classList.add('hidden');
+            });
+            
+            // Procesar jugada
+            btnProcess.addEventListener('click', processJugada);
+            
+            async function processJugada() {
+                const text = jugadaInput.value.trim();
+                
+                if (!text) {
+                    alert('Por favor ingrese una jugada para procesar');
+                    return;
+                }
+                
+                // Mostrar sección de resultados y loading
+                resultsSection.classList.remove('hidden');
+                loading.classList.remove('hidden');
+                resultsContainer.classList.add('hidden');
+                
+                try {
+                    // Usar la librería para parsear
+                    const result = await window.loteriaParser.parseJugada(text);
+                    
+                    // Ocultar loading, mostrar resultados
+                    loading.classList.add('hidden');
+                    resultsContainer.classList.remove('hidden');
+                    
+                    // Mostrar estadísticas
+                    displaySummaryStats(result);
+                    
+                    // Mostrar jugadores
+                    displayPlayers(result);
+                    
+                    // Mostrar rendimiento
+                    displayPerformance(result);
+                    
+                    // Mostrar errores y advertencias
+                    displayErrorsAndWarnings(result);
+                    
+                } catch (error) {
+                    loading.classList.add('hidden');
+                    resultsContainer.classList.remove('hidden');
+                    
+                    errorsContainer.innerHTML = `
+                        <div class="error-panel">
+                            <div class="error-title">
+                                <i class="fas fa-exclamation-circle"></i>
+                                Error en el procesamiento
+                            </div>
+                            <ul class="error-list">
+                                <li class="error-item">
+                                    <i class="fas fa-times-circle"></i>
+                                    ${error.message || 'Error desconocido'}
+                                </li>
+                            </ul>
+                        </div>
+                    `;
+                }
+            }
+            
+            function displaySummaryStats(result) {
+                summaryStats.innerHTML = '';
+                
+                const stats = [
+                    {
+                        label: 'JUGADORES',
+                        value: result.jugadas?.length || 0,
+                        type: 'normal'
+                    },
+                    {
+                        label: 'TOTAL CALCULADO',
+                        value: `$${result.summary?.totalCalculado?.toFixed(2) || '0.00'}`,
+                        type: 'success'
+                    },
+                    {
+                        label: 'TOTAL DECLARADO',
+                        value: result.summary?.totalDeclarado ? `$${result.summary.totalDeclarado.toFixed(2)}` : 'No declarado',
+                        type: result.summary?.totalDeclarado ? 'normal' : 'warning'
+                    },
+                    {
+                        label: 'VÁLIDO',
+                        value: result.summary?.isValid ? 'SÍ' : 'NO',
+                        type: result.summary?.isValid ? 'success' : 'error'
+                    },
+                    {
+                        label: 'CONFIANZA',
+                        value: result.summary?.confidence ? `${(result.summary.confidence * 100).toFixed(1)}%` : 'N/A',
+                        type: 'normal'
+                    },
+                    {
+                        label: 'TIEMPO',
+                        value: `${result.metadata?.parseTime || 0}ms`,
+                        type: 'normal'
+                    }
+                ];
+                
+                stats.forEach(stat => {
+                    const statCard = document.createElement('div');
+                    statCard.className = `stat-card result-${stat.type}`;
+                    statCard.innerHTML = `
+                        <div class="stat-value">${stat.value}</div>
+                        <div class="stat-label">${stat.label}</div>
+                    `;
+                    summaryStats.appendChild(statCard);
+                });
+            }
+            
+            function displayPlayers(result) {
+                playersList.innerHTML = '';
+                
+                if (!result.jugadas || result.jugadas.length === 0) {
+                    playersList.innerHTML = '<p style="text-align: center; color: var(--gray);">No se encontraron jugadores</p>';
+                    return;
+                }
+                
+                result.jugadas.forEach((jugada, index) => {
+                    const playerCard = document.createElement('div');
+                    playerCard.className = 'player-card';
+                    
+                    const avatarLetter = jugada.jugador.charAt(0).toUpperCase();
+                    const totalApuestas = jugada.detalles?.length || 0;
+                    const totalNumeros = jugada.detalles?.reduce((sum, det) => sum + (det.numeros?.length || 0), 0) || 0;
+                    const diferencia = jugada.totalDeclarado ? 
+                        Math.abs(jugada.totalCalculado - jugada.totalDeclarado).toFixed(2) : null;
+                    
+                    playerCard.innerHTML = `
+                        <div class="player-info">
+                            <div class="player-avatar">${avatarLetter}</div>
+                            <div class="player-details">
+                                <div class="player-name">${jugada.jugador}</div>
+                                <div class="player-stats">
+                                    <span>${totalApuestas} apuesta(s)</span>
+                                    <span>${totalNumeros} número(s)</span>
+                                    ${diferencia ? `<span>Diferencia: $${diferencia}</span>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="player-amount">$${jugada.totalCalculado?.toFixed(2) || '0.00'}</div>
+                        <div class="${jugada.isValid ? 'valid-badge' : 'invalid-badge'}">
+                            ${jugada.isValid ? 'VÁLIDO' : 'INVÁLIDO'}
+                        </div>
+                    `;
+                    
+                    playersList.appendChild(playerCard);
+                });
+            }
+            
+            function displayPerformance(result) {
+                performanceInfo.innerHTML = '';
+                
+                const performanceData = [
+                    {
+                        label: 'Tiempo de procesamiento',
+                        value: `${result.metadata?.parseTime || 0}ms`
+                    },
+                    {
+                        label: 'Longitud original',
+                        value: `${result.metadata?.originalLength || 0} caracteres`
+                    },
+                    {
+                        label: 'Longitud procesada',
+                        value: `${result.metadata?.processedLength || 0} caracteres`
+                    },
+                    {
+                        label: 'Tamaño del caché',
+                        value: result.metadata?.cacheStats ? 
+                            `${result.metadata.cacheStats.currentSize || 0}/${result.metadata.cacheStats.maxSize || 0}` : 
+                            'N/A'
+                    },
+                    {
+                        label: 'Tasa de acierto del caché',
+                        value: result.metadata?.cacheStats?.hitRate ? 
+                            `${result.metadata.cacheStats.hitRate.toFixed(1)}%` : 
+                            'N/A'
+                    }
+                ];
+                
+                let html = '<h3 class="card-title"><i class="fas fa-tachometer-alt"></i> Rendimiento</h3>';
+                
+                performanceData.forEach(item => {
+                    html += `
+                        <div class="performance">
+                            <span class="performance-label">${item.label}</span>
+                            <span class="performance-value">${item.value}</span>
+                        </div>
+                    `;
+                });
+                
+                performanceInfo.innerHTML = html;
+            }
+            
+            function displayErrorsAndWarnings(result) {
+                errorsContainer.innerHTML = '';
+                warningsContainer.innerHTML = '';
+                
+                // Mostrar errores
+                if (result.metadata?.errors && result.metadata.errors.length > 0) {
+                    let errorsHtml = `
+                        <div class="error-panel">
+                            <div class="error-title">
+                                <i class="fas fa-exclamation-circle"></i>
+                                Errores (${result.metadata.errors.length})
+                            </div>
+                            <ul class="error-list">
+                    `;
+                    
+                    result.metadata.errors.forEach(error => {
+                        errorsHtml += `
+                            <li class="error-item">
+                                <i class="fas fa-times-circle"></i>
+                                ${error}
+                            </li>
+                        `;
+                    });
+                    
+                    errorsHtml += '</ul></div>';
+                    errorsContainer.innerHTML = errorsHtml;
+                }
+                
+                // Mostrar advertencias
+                if (result.metadata?.warnings && result.metadata.warnings.length > 0) {
+                    let warningsHtml = `
+                        <div class="warning-panel">
+                            <div class="warning-title">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                Advertencias (${result.metadata.warnings.length})
+                            </div>
+                            <ul class="error-list">
+                    `;
+                    
+                    result.metadata.warnings.forEach(warning => {
+                        warningsHtml += `
+                            <li class="error-item">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                ${warning}
+                            </li>
+                        `;
+                    });
+                    
+                    warningsHtml += '</ul></div>';
+                    warningsContainer.innerHTML = warningsHtml;
+                }
+            }
+            
+            // Cargar un ejemplo inicial
+            setTimeout(() => {
+                jugadaInput.value = `Juan Perez
+05 10 con 20
+15 20 con 30
+Total: 100
+
+Maria Garcia
+25 30 con 40
+35 40 con 50
+Total: 180`;
+            }, 500);
+        });
+    </script>
+</body>
+</html>
